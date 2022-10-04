@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "276138578675",
+    "project_id": "fir-memo-app-3d136",
+    "storage_bucket": "fir-memo-app-3d136.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276138578675:android:174dc7c0c8665aece89d86",
+        "android_client_info": {
+          "package_name": "com.example.memo_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276138578675-ompk5v0j6c6c29klqajemhda733fohju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyIMA3o9eyg8JDZeCAcaUgxwZjvbv5AYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276138578675-ompk5v0j6c6c29klqajemhda733fohju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
