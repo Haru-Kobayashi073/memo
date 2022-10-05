@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:memo_app/pages/add_memo_page.dart';
+import 'package:memo_app/pages/memo_detail_page.dart';
 import '../model/memo.dart';
 
 class TopPage extends StatefulWidget {
@@ -46,11 +48,19 @@ class _TopPageState extends State<TopPage> {
               title: Text(memoList[index].title),
               onTap: (() {
                 //確認画面に遷移する記述
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) =>
+                            MemoDetailPage(memoList[index]))));
               }),
             );
           })),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddMemoPage()));
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
