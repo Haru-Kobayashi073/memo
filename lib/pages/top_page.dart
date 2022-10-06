@@ -38,6 +38,7 @@ class _TopPageState extends State<TopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Flutter × Firebase'),
       ),
@@ -59,7 +60,7 @@ class _TopPageState extends State<TopPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddMemoPage()));
+              MaterialPageRoute(builder: (context) => const AddMemoPage()));
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
