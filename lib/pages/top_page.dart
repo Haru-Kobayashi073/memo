@@ -13,27 +13,7 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> {
-  List<Memo> memoList = [];
-
-  Future<void> fetchmemo() async {
-    final memocollection =
-        await FirebaseFirestore.instance.collection('memo').get();
-    final docs = memocollection.docs;
-    for (var doc in docs) {
-      Memo fetchmemo = Memo(
-          title: doc.data()['title'],
-          detail: doc.data()['detail'],
-          createdDate: doc.data()['createdDate']);
-      memoList.add(fetchmemo);
-    }
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchmemo();
-  }
+  final memoCllection = FirebaseFirestore.instance.collection('memo');
 
   @override
   Widget build(BuildContext context) {
@@ -42,21 +22,73 @@ class _TopPageState extends State<TopPage> {
       appBar: AppBar(
         title: const Text('Flutter × Firebase'),
       ),
-      body: ListView.builder(
-          itemCount: memoList.length,
-          itemBuilder: ((context, index) {
-            return ListTile(
-              title: Text(memoList[index].title),
-              onTap: (() {
-                //確認画面に遷移する記述
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) =>
-                            MemoDetailPage(memoList[index]))));
-              }),
-            );
-          })),
+      body: StreamBuilder<QuerySnapshot>(
+          stream: memoCllection.snapshots(), //追加や変更を検知
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            if (!snapshot.hasData) {
+              return const Center(
+                child: Text('データがありません。'),
+              );
+            }
+            final docs = snapshot.data!.docs; //docsはdocuments
+            return ListView.builder(
+                itemCount: docs.length,
+                itemBuilder: ((context, index) {
+                  Map<String, dynamic> data =
+                      docs[index].data() as Map<String, dynamic>;
+
+                  final Memo fetchMemo = Memo(
+                    title: data['title'],
+                    detail: data['detail'],
+                    createdDate: data['createdDate'],
+                    updatedDate: data['updatedDate'],
+                  );
+                  return ListTile(
+                    title: Text(fetchMemo.title),
+                    trailing: IconButton(
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return SafeArea(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      onTap: () {
+                                        
+                                      },
+                                      leading: Icon(Icons.edit),
+                                      title: Text('編集'),
+                                    ),
+                                    ListTile(
+                                      onTap: () {
+                                        
+                                      },
+                                      leading: Icon(Icons.delete),
+                                      title: Text('削除'),
+                                    )
+                                  ],
+                                ),
+                              );
+                            });
+                      },
+                      icon: const Icon(Icons.edit),
+                    ),
+                    onTap: (() {
+                      //確認画面に遷移する記述
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) =>
+                                  MemoDetailPage(fetchMemo))));
+                    }),
+                  );
+                }));
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
