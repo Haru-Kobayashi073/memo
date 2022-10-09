@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:memo_app/pages/add_memo_page.dart';
+import 'package:memo_app/pages/add_edit_memo_page.dart';
 import 'package:memo_app/pages/memo_detail_page.dart';
 import '../model/memo.dart';
 
@@ -15,6 +15,11 @@ class TopPage extends StatefulWidget {
 class _TopPageState extends State<TopPage> {
   final memoCllection = FirebaseFirestore.instance.collection('memo');
 
+  Future<void> deleteMemo(String id) async {
+    final doc = FirebaseFirestore.instance.collection('memo').doc(id);
+    await doc.delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +28,7 @@ class _TopPageState extends State<TopPage> {
         title: const Text('Flutter × Firebase'),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: memoCllection.snapshots(), //追加や変更を検知
+          stream: memoCllection.orderBy('createdDate', descending: true).snapshots(), //追加や変更を検知
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -41,6 +46,7 @@ class _TopPageState extends State<TopPage> {
                       docs[index].data() as Map<String, dynamic>;
 
                   final Memo fetchMemo = Memo(
+                    id: docs[index].id,
                     title: data['title'],
                     detail: data['detail'],
                     createdDate: data['createdDate'],
@@ -59,14 +65,23 @@ class _TopPageState extends State<TopPage> {
                                   children: [
                                     ListTile(
                                       onTap: () {
-                                        
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddEditMemoPage(
+                                                currentMemo: fetchMemo,
+                                              ),
+                                            ));
                                       },
                                       leading: Icon(Icons.edit),
                                       title: Text('編集'),
                                     ),
                                     ListTile(
-                                      onTap: () {
-                                        
+                                      onTap: () async {
+                                        await deleteMemo(fetchMemo.id);
+                                        Navigator.pop(context);
                                       },
                                       leading: Icon(Icons.delete),
                                       title: Text('削除'),
@@ -92,7 +107,7 @@ class _TopPageState extends State<TopPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const AddMemoPage()));
+              MaterialPageRoute(builder: (context) => const AddEditMemoPage()));
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),

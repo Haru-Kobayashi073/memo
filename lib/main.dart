@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:memo_app/firebase_options.dart';
 import 'package:memo_app/pages/top_page.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
