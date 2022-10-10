@@ -52,55 +52,62 @@ class _TopPageState extends State<TopPage> {
                     createdDate: data['createdDate'],
                     updatedDate: data['updatedDate'],
                   );
-                  return ListTile(
-                    title: Text(fetchMemo.title),
-                    trailing: IconButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return SafeArea(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    ListTile(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddEditMemoPage(
-                                                currentMemo: fetchMemo,
-                                              ),
-                                            ));
-                                      },
-                                      leading: Icon(Icons.edit),
-                                      title: Text('編集'),
-                                    ),
-                                    ListTile(
-                                      onTap: () async {
-                                        await deleteMemo(fetchMemo.id);
-                                        Navigator.pop(context);
-                                      },
-                                      leading: Icon(Icons.delete),
-                                      title: Text('削除'),
-                                    )
-                                  ],
-                                ),
-                              );
-                            });
-                      },
-                      icon: const Icon(Icons.edit),
+                  return Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(),
+                      )
                     ),
-                    onTap: (() {
-                      //確認画面に遷移する記述
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) =>
-                                  MemoDetailPage(fetchMemo))));
-                    }),
+                    child: ListTile(
+                      title: Text(fetchMemo.title),
+                      trailing: IconButton(
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return SafeArea(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      ListTile(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddEditMemoPage(
+                                                  currentMemo: fetchMemo,
+                                                ),
+                                              ));
+                                        },
+                                        leading: Icon(Icons.edit),
+                                        title: Text('編集'),
+                                      ),
+                                      ListTile(
+                                        onTap: () async {
+                                          await deleteMemo(fetchMemo.id);
+                                          Navigator.pop(context);
+                                        },
+                                        leading: Icon(Icons.delete),
+                                        title: Text('削除'),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              });
+                        },
+                        icon: const Icon(Icons.edit),
+                      ),
+                      onTap: (() {
+                        //確認画面に遷移する記述
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: ((context) =>
+                                    MemoDetailPage(fetchMemo))));
+                      }),
+                    ),
                   );
                 }));
           }),
